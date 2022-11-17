@@ -1,0 +1,17 @@
+language: generic
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t matthewjury4/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true matthewjury4/react-test npm test
+
+after_success:
+  - docker build -t matthewjury4/multi-client ./client
+  - docker build -t matthewjury4/multi-nginx ./nginx
+  - docker build -t matthewjury4/multi-server ./server
+  - docker build -t matthewjury4/multi-worker ./worker
